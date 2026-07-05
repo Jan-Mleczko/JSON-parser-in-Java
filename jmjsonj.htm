@@ -1,0 +1,747 @@
+<HTML>
+  <HEAD>
+    <META NAME="author" CONTENT="Jan Mleczko">
+    <TITLE>Parser JSON w Javie - dokumentacja</TITLE>
+    <STYLE TYPE="text/css">
+      pre {color: black; background-color: lavender; padding: 8px;
+           font-family: "Courier New", monospace}
+      pre a {color: navy}
+      code {color: black; background-color: lavender}
+      h2, h3 {font-family: sans-serif}
+      h2 {color: grey; border-bottom: 3px groove navy}
+      h2 em {color: black; font-style: normal}
+    </STYLE>
+  </HEAD><BODY>
+    <A NAME="wstep" ID="wstep"></A>
+    <H1>Dokumentacja parsera JSON Jana Mleczko w Javie</H1>
+    <P STYLE="text-align:right">Jan Mleczko, czerwiec-lipiec 2026</P>
+    <P>Jest to dokumentacja biblioteki klas w jêzyku programowania Java SE 8
+    (a prawdopodobnie zgodnej tak¿e z innymi wersjami Javy) do przetwarzania
+    danych w formacie
+    <ACRONYM TITLE="Javascript Object Notation">JSON</ACRONYM> oraz obliczeñ w
+    systemie dziesiêtnym. Klasy zamieniaj¹ JSON na ³atw¹ w odczycie strukturê
+    obiektow¹ i odwrotnie - umo¿liwiaj¹ tworzenie takiej struktury i zamieniaj¹
+    j¹ na JSON.</P>
+    <P>U¿ytkownik powinien znaæ format JSON. On sam nie bêdzie tutaj w pe³ni
+    opisany.</P>
+    <P>Zalet¹ tej biblioteki jest to, ¿e polega ona tylko na standardowych
+    funkcjonalnoœciach Java SE 8, a nie na innych bibliotekach ani na
+    okreœlonym systemie operacyjnym lub cechach wybranego typu komputera.</P>
+    <P STYLE="font-size:large">Klasy biblioteki zebrane sa w pakiet
+    <CODE>janmlecz.json</CODE>.</P>
+    <H3>Klasy</H3>
+    <UL>
+      <LI><A HREF="#pj">ParserJSON</A></LI>
+      <LI>
+        <A HREF="#wa">WartoscJSON</A> i dziedzicz¹ce po niej:
+        <UL>
+          <LI><A HREF="#li">LiczbaJSON</A></LI>
+          <LI><A HREF="#te">TekstJSON</A></LI>
+          <LI><A HREF="#wl">WLogicznaJSON</A></LI>
+          <LI><A HREF="#ta">TablicaJSON</A></LI>
+          <LI><A HREF="#sl">SlownikJSON</A></LI>
+          <LI><A HREF="#wp">WPustaJSON</A></LI>
+        </UL>
+      </LI>
+      <LI><A HREF="#ld">LiczbaDziesietna</A></LI>
+    </UL>
+    <H3>Wyj¹tki</H3>
+    <UL>
+      <LI>ZleZeSkladniaJSON</LI>
+      <LI>ZleZObliczeniamiDziesietnymi</LI>
+    </UL>
+    <P>Oba nale¿¹ do <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html">RuntimeException</A>.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="pj" ID="pj"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    <H2>Klasa <EM>ParserJSON</EM></H2>
+<PRE>
+package janmlecz.json;
+public class ParserJSON
+</PRE>
+    <P>Klasa odpowiedzialna za parsowanie JSON do struktury obiektowej.</P>
+    <H3>Metody statyczne</H3>
+<PRE>
+public static <A HREF="#wa">WartoscJSON</A> <A HREF="#pjpa">parsuj</A> (<A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> zakodowany)
+</PRE>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="pjpa" ID="pjpa"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A> Klasa <A HREF="#pj">ParserJSON</A>
+    <H2>Metoda <EM>parsuj</EM> klasy ParserJSON</H2>
+<PRE>
+public static <A HREF="#wa">WartoscJSON</A> parsuj (<A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> zakodowany)
+</PRE>
+    <P>Metoda przyjmuje obiekt JSON za³adowany w ca³oœci do jednego ³añcucha
+    znaków - obiektu <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A>.
+    Ma to byæ pojedyncza wartoœæ dowolnego typu w JSON. Zamieniana jest na
+    obiekt jednej z klas pochodnych od <A HREF="#wj">WartoscJSON</A> i ten
+    obiekt jest zwracany przez metodê.</P>
+    <P>Ten parser nie jest walidatorem. Mo¿e przyj¹æ pewne przypadki
+    nieprawid³owych danych JSON i odwzorowaæ je na strukturê obiektow¹
+    odpowiadaj¹c¹ jakiemuœ prawid³owemu obiektowi JSON.</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE>ZleZeSkladniaJSON</CODE>, gdy tekst nie jest prawid³ow¹
+      wartoœci¹ w formacie JSON i nie mo¿e zostaæ przeparsowany albo wystêpuj¹
+      w nim zbyt du¿e lub zbyt dok³adne liczby.</LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="wa" ID="wa"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    <H2>Klasa <EM>WartoscJSON</EM></H2>
+<PRE>
+package janmlecz.json;
+public abstract class WartoscJSON
+</PRE>
+    <P>Reprezentuje wartoœæ w sensie JSON dowolnego typu. Dla ka¿dego typu
+    danych JSON jest w bibliotece odpowiednia klasa dziedzicz¹ca po
+    <CODE>WartoscJSON</CODE>. Wartoœci niektórych typów mog¹ zawieraæ w sobie
+    zagnie¿d¿one wartoœci.</P>
+    <P>Obiekty <CODE>WartoscJSON</CODE> zwracane przez metody biblioteki zawsze
+    s¹ jednej z wy¿ej wspomnianych klas. Klasa <CODE>WartoscJSON</CODE> nie ma
+    ¿adnych w³aœciwych sobie metod ani pól publicznych. Postêpowanie z takim
+    obiektem najlepiej zacz¹æ od ustalenia jego bardziej szczegó³owej klasy
+    odpowiadaj¹cej typowi wartoœci pochodz¹cej z JSON. Mo¿na:</P>
+    <OL TYPE="a">
+      <LI>rzutowaæ referencjê <CODE>WartoscJSON</CODE> na referencjê jednej z
+      klas pochodnych dla typów JSON. Nieoczekiwany typ objawi siê wyj¹tkiem
+      <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassCastException.html">ClassCastException</A>.
+      </LI>
+      <LI>sprawdziæ szczegó³ow¹ klasê operatorem <CODE>instanceof</CODE>.</LI>
+    </OL>
+    <P>Klasy z biblioteki dziedzicz¹ce po <CODE>WartoscJSON</CODE> maj¹ to do
+    siebie, ¿e tekst zwracany przez ich metody <CODE>toString</CODE> jest
+    poprawnym JSON. Nie dotyczy to obiektów
+    <CODE><A HREF="#ta">TablicaJSON</A></CODE>
+    i <CODE><A HREF="#sl">SlownikJSON</A></CODE> w stanie otwartym, o czym jest
+    mowa w dokumentacji tych klas.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="li" HREF="li"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    <H2>Klasa <EM>LiczbaJSON</EM></H2>
+<PRE>
+package janmlecz.json;
+public class LiczbaJSON extends <A HREF="#wa">WartoscJSON</A>
+</PRE>
+    <P>Odzwierciedla wartosæ liczbow¹ zapisywan¹ w JSON jako np.
+    <CODE>-000123.4500E2</CODE>. Liczba ta jest przechowywana w oryginalnej
+    postaci dziesiêtnej (co ma znaczenie przy u³amkach) w obiekcie
+    <A HREF="#ld">LiczbaDziesietna</A>.</P>
+    <H3>Konstruktor</H3>
+<PRE>
+public <A HREF="#li1k">LiczbaJSON</A> (<A HREF="#ld">LiczbaDziesietna</A> a)
+</PRE>
+    <H3>Metody</H3>
+<PRE>
+public <A HREF="#ld">LiczbaDziesietna</A> <A HREF="#liuz">uzysLiczbe</A> ()
+
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> <A HREF="#lito">toString</A> ()
+</PRE>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="li1k" ID="li1k"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A> Klasa <A HREF="#li">LiczbaJSON</A>
+    <H2>Konstruktor klasy <EM>LiczbaJSON</EM></H2>
+<PRE>
+public LiczbaJSON (<A HREF="#ld">LiczbaDziesietna</A> a)
+</PRE>
+    <P>Opakowuje obiekt <A HREF="#ld">LiczbaDziesietna</A> w obiekt
+    <CODE>LiczbaJSON</CODE>.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="liuz" ID="liuz"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A> Klasa <A HREF="#li">LiczbaJSON</A>
+    <H2>Metoda <EM>uzysLiczbe</EM> klasy LiczbaJSON</H2>
+<PRE>
+public <A HREF="#ld">LiczbaDziesietna</A> uzysLiczbe ()
+</PRE>
+    <P>Uzyskuje wartoœæ liczbow¹ obiektu jako obiekt
+    <A HREF="#ld">LiczbaDziesietna</A>. Jeœli dany obiekt
+    <CODE>LiczbaJSON</CODE> pochodzi z
+    <A HREF="#pjpa">metody parsuj klasy ParserJSON</A>, jest to droga dostêpu
+    do liczby z JSON.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="lito" ID="lito"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A> Klasa <A HREF="#li">LiczbaJSON</A>
+    <H2>Metoda <EM>toString</EM> klasy LiczbaJSON</H2>
+<PRE>
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> toString ()
+</PRE>
+    <P>Zamienia obiekt na tekstow¹ postaæ reprezentuj¹c¹ go w formacie
+    JSON.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="te" ID="te"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    <H2>Klasa <EM>TekstJSON</EM></H2>
+<PRE>
+package janmlecz.json;
+public class TekstJSON extends <A HREF="#wa">WartoscJSON</A>
+</PRE>
+    <P>Odwzorowuje wartoœæ tekstow¹, ang. <EM>string</EM>, z JSON albo
+    przeznaczon¹ do umieszczenia w JSON.</P>
+    <H3>Konstruktor</H3>
+<PRE>
+public <A HREF="#te1k">TekstJSON</A> (String a)
+</PRE>
+    <H3>Metody</H3>
+<PRE>
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> <A HREF="#teuz">uzysTekst</A> ()
+
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> <A HREF="#teto">toString</A> ()
+</PRE>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="te1k" ID="te1k"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A> Klasa <A HREF="#te">TekstJSON</A>
+    <H2>Konstruktor klasy <EM>TekstJSON</EM></H2>
+<PRE>
+public TekstJSON (<A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> a)
+</PRE>
+    <P>Opakowuje ³añcuch znaków w obiekt wartoœci w sensie JSON.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="teuz" ID="teuz"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A> Klasa <A HREF="#te">TekstJSON</A>
+    <H2>Metoda <EM>uzysTekst</EM> klasy <EM>TekstJSON</EM></H2>
+<PRE>
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> uzysTekst ()
+</PRE>
+    <P>Uzyskuje tekst - zawartoœæ obiektu. Zwraca np. trzyznakowy ³añcuch
+    <I>abc</I> odpowiadaj¹cy zapisowi <CODE>"abc"</CODE> w JSON.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="teto" ID="teto"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A> Klasa <A HREF="#te">TekstJSON</A>
+    <H2>Metoda <EM>toString</EM> klasy <EM>TekstJSON</EM></H2>
+<PRE>
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> toString ()
+</PRE>
+    <P>Zamienia obiekt na tekstow¹ postaæ w formacie JSON. Jest to coœ innego
+    ni¿ wewnêtrzna zawartoœæ tekstowa uzyskiwana metod¹
+    <CODE><A HREF="#teuz">uzysTekst</A></CODE> - ³añcuch jest w cudzys³owach, a
+    niektóre znaki mog¹ byæ zakodowane zgodnie ze sk³adni¹ JSON. Wynikowy JSON
+    zawiera wy³¹cznie znaki drukowalne ASCII i spacje.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="wl" ID="wl"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    <H2>Klasa <EM>WLogicznaJSON</EM></H2>
+<PRE>
+package janmlecz.json;
+public class WLogicznaJSON extends <A HREF="#wa">WartoscJSON</A>
+</PRE>
+    <P>Przedstawia wartoœæ logiczn¹, ang. <EM>Boolean</EM>, z JSON lub
+    przeznaczon¹ do umieszczenia w JSON. Wartoœci te odpowiadaj¹ wartoœciom
+    typu podstawowego <CODE>boolean</CODE> Javy.</P>
+    <H3>Konstruktor</H3>
+<PRE>
+public <A HREF="#wl1k">WLogicznaJSON</A> (boolean w)
+</PRE>
+    <H3>Metody</H3>
+<PRE>
+  public boolean <A HREF="#wluz">uzysWart</A> ()
+
+  public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> <A HREF="#wlto">toString</A> ()
+</PRE>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="wl1k" ID="wl1k"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#wl">WLogicznaJSON</A>
+    <H2>Konstruktor klasy <EM>WLogicznaJSON</EM></H2>
+<PRE>
+public WLogicznaJSON (boolean w)
+</PRE>
+    <P>Opakowuje wartoœæ logiczn¹ w obiekt pasuj¹cy do struktury powstaj¹cej
+    przy parsowaniu JSON lub konstruowanej w celu utworzenia obiektu JSON za
+    pomoc¹ biblioteki.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="wluz" ID="wluz"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#wl">WLogicznaJSON</A>
+    <H2>Metoda <EM>uzysWart</EM> klasy <EM>WLogicznaJSON</EM></H2>
+<PRE>
+public boolean uzysWart ()
+</PRE>
+    <P>Wypakowuje prost¹ wartoœæ logiczn¹ z obiektu.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="wlto" ID="wloo"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#wl">WLogicznaJSON</A>
+    <H2>Metoda <EM>toString</EM> klasy <EM>WLogicznaJSON</EM></H2>
+<PRE>
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> toString ()
+</PRE>
+    <P>Zamienia obiekt na jego postaæ tekstow¹ w³aœciw¹ w formacie JSON.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ta" ID="ta"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    <H2>Klasa <EM>TablicaJSON</EM></H2>
+<PRE>
+package janmlecz.json;
+public class TablicaJSON extends <A HREF="#wa">WartoscJSON</A>
+</PRE>
+    <P>Odpowiada tablicy w JSON zapisywanej jako np.
+    <CODE>[9, 25, "Jan Mleczko"]</CODE>. Obiekt tej klasy nie jest tworzony ze
+    z³o¿onej struktury danych odpowiadaj¹cej tablicy, a zamiast tego wype³niany
+    stopniowo. Obiekt tej klasy jest w jednym z dwóch stanów:</P>
+    <UL>
+      <LI><B>otwartym</B> - Jest to stan pocz¹tkowy pozwalaj¹cy wype³niæ
+      tablicê. Nie jest znany jej rozmiar. Mo¿na dopisywaæ elementy na koniec.
+      Im wiêcej elementów zostanie dodanych, tym wiêkszy bêdzie rozmiar
+      tablicy. Otwart¹ tablicê zawsze mo¿na domkn¹æ.</LI>
+      <LI><B>zamkniêtym</B> - Stan koñcowy bez powrotu do stanu otwartego.
+      Dostêpny jest rozmiar tablicy, w tej chwili ju¿ sta³y, poniewa¿ nie
+      mo¿na ju¿ dopisywaæ elementów.</LI>
+    </UL>
+    <P>Jeœli obiekt pochodzi z parsowania JSON, jest ju¿ w stanie zamkniêtym.
+    Obiekty tworzone konstruktorem do póŸniejszego umieszczenia w JSON
+    tworzonym za pomoc¹ biblioteki s¹ otwarte, ale do czasu osadzenia w JSON
+    musz¹ zostaæ wype³nione wedle potrzeb i domkniête.</P>
+    <P>Rozmiar tablicy, tzn. iloœc jej elementów, musi mieœciæ siê w zakresie
+    typu <CODE>int</CODE>.</P>
+    <H3>Konstruktor</H3>
+<PRE>
+public <A HREF="#ta1k">TablicaJSON</A> ()
+</PRE>
+    <H3>Metody</H3>
+<PRE>
+public void <A HREF="#tadd">dodaj</A> (<A HREF="#wa">WartoscJSON</A> nowa)
+
+public void <A HREF="#tadm">domknij</A> ()
+
+public int <A HREF="#taur">uzysRozm</A> ()
+
+public <A HREF="#wa">WartoscJSON</A> <A HREF="#taue">uzysElem</A> (int indeks)
+
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> <A HREF="#tato">toString</A> ()
+</PRE>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ta1k" ID="ta1k"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ta">TablicaJSON</A>
+    <H2>Konstruktor klasy <EM>TablicaJSON</EM></H2>
+<PRE>
+public TablicaJSON ()
+</PRE>
+    <P>Tworzy obiekt w stanie otwartym bez dodanych ¿adnych elementów.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="tadd" ID="tadd"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ta">TablicaJSON</A>
+    <H2>Metoda <EM>dodaj</EM> klasy <EM>TablicaJSON</EM></H2>
+<PRE>
+public void dodaj (<A HREF="#wa">WartoscJSON</A> nowa)
+</PRE>
+    <P>Dopisuje element do tablicy. Tablica mo¿e zawieraæ dowolne wartoœci w
+    sensie JSON, tak¿e mieszanych typów w jednej tablicy.</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE><A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html">IllegalStateException</A></CODE>,
+      gdy obiekt by³ w stanie zamniêtym.<BR>
+      <U>To jest metoda stanu OTWARTEGO.</U>
+      Stany obiektów <CODE>TablicaJSON</CODE> opisane s¹ w dokumentacji klasy.
+      </LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="tadm" ID="tadm"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ta">TablicaJSON</A>
+    <H2>Metoda <EM>domknij</EM> klasy <EM>TablicaJSON</EM></H2>
+<PRE>
+public void domknij ()
+</PRE>
+    <P>Domyka obiekt, tzn. przeprowadza go ze stanu otwartego do zamkniêtego.
+    Elementy w zamkniêtej tablicy s¹ w kolejnoœci, w jakiej by³y dodawane.</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE><A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html">IllegalStateException</A></CODE>,
+      gdy obiekt by³ w stanie zamniêtym.<BR>
+      <U>To jest metoda stanu OTWARTEGO.</U>
+      Stany obiektów <CODE>TablicaJSON</CODE> opisane s¹ w dokumentacji klasy.
+      </LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="taur" ID="taur"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ta">TablicaJSON</A>
+    <H2>Metoda <EM>uzysRozm</EM> klasy <EM>TablicaJSON</EM></H2>
+<PRE>
+public int uzysRozm ()
+</PRE>
+    <P>Zwraca iloœæ elementów tablicy.</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE><A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html">IllegalStateException</A></CODE>,
+      gdy obiekt by³ w stanie otwartym.<BR>
+      <U>To jest metoda stanu ZAMKNIÊTEGO.</U>
+      Stany obiektów <CODE>TablicaJSON</CODE> opisane s¹ w dokumentacji klasy.
+      </LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="taue" ID="taue"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ta">TablicaJSON</A>
+    <H2>Metoda <EM>uzysElem</EM> klasy <EM>TablicaJSON</EM></H2>
+<PRE>
+public <A HREF="#wa">WartoscJSON</A> uzysElem (int indeks)
+</PRE>
+    <P>Uzyskuje element tablicy pod indeksem <CODE>indeks</CODE>. Indeksy s¹
+    wiêksze lub równe 0 i mniejsze ni¿ iloœæ elementów tablicy.</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE><A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html">IllegalStateException</A></CODE>,
+      gdy obiekt by³ w stanie otwartym.<BR>
+      <U>To jest metoda stanu ZAMKNIÊTEGO.</U>
+      Stany obiektów <CODE>TablicaJSON</CODE> opisane s¹ w dokumentacji klasy.
+      </LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="tato" ID="tato"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ta">TablicaJSON</A>
+    <H2>Metoda <EM>toString</EM> klasy <EM>TablicaJSON</EM></H2>
+<PRE>
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> toString ()
+</PRE>
+    <P>Tworzy i zwraca tekstow¹ postaæ obiektu w formacie JSON.</P>
+    <P><U>Metoda stanu ZAMKNIÊTEGO.</U> Stany obiektów
+    <CODE>TablicaJSON</CODE> opisane s¹ w dokumentacji klasy.</P>
+    <P>W stanie otwartym zwraca tekst niebêd¹cy ¿adn¹ prawid³ow¹ wartoœci¹ w
+    JSON, a krótkim, czytelnym dla cz³owieka ostrze¿eniem o stanie obiektu.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="sl" ID="sl"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    <H2>Klasa <EM>SlownikJSON</EM></H2>
+<PRE>
+package janmlecz.json;
+public class SlownikJSON extends <A HREF="#wa">WartoscJSON</A>
+</PRE>
+    <P>Odpowiada s³ownikowi, "obiektowi" w JSON zapisywanemu jako np.
+    <CODE>{"cena" : 1.23, "dostawaWCenie" : false}</CODE>. Obiekt tej klasy nie
+    jest tworzony ze z³o¿onej struktury danych odpowiadaj¹cej s³ownikowi, a
+    zamiast tego wype³niany stopniowo. Obiekt tej klasy jest w jednym z dwóch
+    stanów:</P>
+    <UL>
+      <LI><B>otwartym</B> - Jest to stan pocz¹tkowy pozwalaj¹cy wype³niæ
+      s³ownik. Mo¿na dodawaæ do niego wpisy. Otwarty s³ownik zawsze mo¿na
+      domkn¹æ.</LI>
+      <LI><B>zamkniêtym</B> - Stan koñcowy bez powrotu do stanu otwartego.
+      Obiekt w stanie zamkniêtym jest niemutowalny. Udostêpnia do odczytu
+      zawartoœæ s³ownika.</LI>
+    </UL>
+    <P>Jeœli obiekt pochodzi z parsowania JSON, jest ju¿ w stanie zamkniêtym.
+    Obiekty tworzone konstruktorem do póŸniejszego umieszczenia w JSON
+    tworzonym za pomoc¹ biblioteki s¹ otwarte, ale do czasu osadzenia w JSON
+    musz¹ zostaæ wype³nione wedle potrzeb i domkniête.</P>
+    <H3>Konstruktor</H3>
+<PRE>
+public <A HREF="#sl1k">SlownikJSON</A> ()
+</PRE>
+    <H3>Metody</H3>
+<PRE>
+public void <A HREF="#sldd">dodaj</A> (<A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> kcz, <A HREF="#wa">WartoscJSON</A> wsc)
+
+public void <A HREF="#sldm">domknij</A> ()
+
+public <A HREF="#wa">WartoscJSON</A> <A HREF="#sluz">uzysWart</A> (<A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> kcz)
+
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> <A HREF="#slto">toString</A> ()
+</PRE>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="sl1k" ID="sl1k"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#sl">SlownikJSON</A>
+    <H2>Konstruktor klasy <EM>SlownikJSON</EM></H2>
+<PRE>
+public SlownikJSON ()
+</PRE>
+    <P>Tworzy obiekt w stanie otwartym bez dodanych ¿adnych wpisów.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="sldd" ID="sldd"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#sl">SlownikJSON</A>
+    <H2>Metoda <EM>dodaj</EM> klasy <EM>SlownikJSON</EM></H2>
+<PRE>
+public void dodaj (<A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> kcz, <A HREF="#wa">WartoscJSON</A> wsc)
+</PRE>
+    <P>Dopisuje do s³ownika wpis o wartoœci <CODE>wsc</CODE> pod kluczem
+    <CODE>kcz</CODE>. Nie mo¿na dodawaæ wielu wpisów z takim samym kluczem!</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE><A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html">IllegalStateException</A></CODE>,
+      gdy obiekt by³ w stanie zamniêtym.<BR>
+      <U>To jest metoda stanu OTWARTEGO.</U>
+      Stany obiektów <CODE>SlownikJSON</CODE> opisane s¹ w dokumentacji klasy.
+      </LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="sldm" ID="sldm"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#sl">SlownikJSON</A>
+    <H2>Metoda <EM>domknij</EM> klasy <EM>SlownikJSON</EM></H2>
+<PRE>
+public void domknij ()
+</PRE>
+    <P>Domyka obiekt, tzn. przeprowadza go ze stanu otwartego do
+    zamkniêtego.</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE><A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html">IllegalStateException</A></CODE>,
+      gdy obiekt by³ w stanie zamniêtym.<BR>
+      <U>To jest metoda stanu OTWARTEGO.</U>
+      Stany obiektów <CODE>SlownikJSON</CODE> opisane s¹ w dokumentacji klasy.
+      </LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="sluz" ID="sluz"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#sl">SlownikJSON</A>
+    <H2>Metoda <EM>uzysWart</EM> klasy <EM>SlownikJSON</EM></H2>
+<PRE>
+public <A HREF="#wa">WartoscJSON</A> uzysWart (<A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> kcz)
+</PRE>
+    <P>Uzyskuje wartoœæ ze s³ownika pod kluczem <CODE>kcz</CODE>. Jeœli nie ma
+    w s³owniku wpisu z takim kluczem, zwraca <CODE>null</CODE>.</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE><A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html">IllegalStateException</A></CODE>,
+      gdy obiekt by³ w stanie otwartym.<BR>
+      <U>To jest metoda stanu ZAMKNIÊTEGO.</U>
+      Stany obiektów <CODE>SlownikJSON</CODE> opisane s¹ w dokumentacji klasy.
+      </LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="slto" ID="slto"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#sl">SlownikJSON</A>
+    <H2>Metoda <EM>toString</EM> klasy <EM>SlownikJSON</EM></H2>
+<PRE>
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> toString ()
+</PRE>
+    <P>Tworzy i zwraca tekstow¹ postaæ obiektu w formacie JSON.</P>
+    <P><U>Metoda stanu ZAMKNIÊTEGO.</U> Stany obiektów
+    <CODE>SlownikJSON</CODE> opisane s¹ w dokumentacji klasy.</P>
+    <P>W stanie otwartym zwraca tekst niebêd¹cy ¿adn¹ prawid³ow¹ wartoœci¹ w
+    JSON, a krótkim, czytelnym dla cz³owieka ostrze¿eniem o stanie obiektu.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="wp" ID="wp"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    <H2>Klasa <EM>WPustaJSON</EM></H2>
+<PRE>
+package janmlecz.json;
+public class WPustaJSON extends <A HREF="#wa">WartoscJSON</A>
+</PRE>
+    <P>Odzwierciedla wartoœæ pust¹ JSON zapisywan¹ jako <CODE>null</CODE>.</P>
+    <H3>Konstruktor</H3>
+<PRE>
+public <A HREF="#wp1k">WPustaJSON</A> ()
+</PRE>
+    <H3>Metody</H3>
+<PRE>
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> <A HREF="#wpto">toString</A> ()
+</PRE>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="wp1k" ID="wp1k"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A> Klasa <A HREF="#wp">WPustaJSON</A>
+    <H2>Konstruktor klasy <EM>WPustaJSON</EM></H2>
+<PRE>
+public WPustaJSON ()
+</PRE>
+    <P>Tworzy obiekt odpowiadaj¹cy wartoœci <CODE>null</CODE> w JSON.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="wpto" ID="wpto"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A> Klasa <A HREF="#wp">WPustaJSON</A>
+    <H2>Metoda <EM>toString</EM> klasy <EM>WPustaJSON</EM></H2>
+<PRE>
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> toString ()
+</PRE>
+    <P>Zwraca tekstow¹ reprezentacjê wartoœci pustej w formacie JSON.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ld" ID="ld"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    <H2>Klasa <EM>LiczbaDziesietna</EM></H2>
+<PRE>
+package janmlecz.json;
+public class LiczbaDziesietna
+</PRE>
+    <P>Obliczenia na du¿ych liczbach wymiernych w systemie dziesiêtnym. Ka¿dy
+    obiekt klasy <CODE>LiczbaDziesietna</CODE> reprezentuje pewn¹ liczbê
+    okreœlon¹ w chwili jego utworzenia i nie zmieniaj¹c¹ siê póŸniej. Zatem
+    obiekty te s¹ niemutowalne.</P>
+    <P>Reprezentowane liczby mieszcz¹ siê w zakresie od
+    (-10<SUP>20</SUP>&nbsp;+&nbsp;10<SUP>-10</SUP>) do
+    (10<SUP>20</SUP>&nbsp;-&nbsp;10<SUP>-10</SUP>) z krokiem co
+    10<SUP>-10</SUP>.</P>
+    <P>Zaimplementowane dzia³ania to dodawanie, odejmowanie, mno¿enie, a tak¿e
+    porównywanie. Metody publiczne odpowiedzialne za wykonywanie dzia³añ
+    zwracaj¹ nowy obiekt reprezentuj¹cy wynik (z wyj¹tkiem oczywiœcie porównañ
+    zwracaj¹cych wartoœci logiczne). Jeœli dok³adny wynik jest
+    niereprezentowalny, rzucany jest wyj¹tek.</P>
+    <H3>Konstruktory</H3>
+<PRE>
+public <A HREF="#ld1k">LiczbaDziesietna</A> ()
+
+public <A HREF="#ld2k">LiczbaDziesietna</A> (<A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> tekstObiektowy)
+
+public <A HREF="#ld3k">LiczbaDziesietna</A> (int wartosc, int wykl)
+</PRE>
+    <H3>Metody</H3>
+<PRE>
+public boolean <A HREF="#ldro">rowna</A> (LiczbaDziesietna inna)
+
+public boolean <A HREF="#ldwi">wiekszaNiz</A> (LiczbaDziesietna inna)
+
+public LiczbaDziesietna <A HREF="#lddo">dodaj</A> (LiczbaDziesietna druga)
+
+public LiczbaDziesietna <A HREF="#ldod">odejmij</A> (LiczbaDziesietna odjemnik)
+
+public LiczbaDziesietna <A HREF="#ldmn">mnoz</A> (LiczbaDziesietna inna)
+
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> <A HREF="#ldna">naTekst</A> (int wyrownanieCalkowitej, int wyrownanieUlamkowej,
+  char znakPodzialu, char znakWyrownania, boolean zaznaczacPlus)
+
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> <A HREF="#ldto">toString</A> ()
+</PRE>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ld1k" ID="ld1k"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ld">LiczbaDziesietna</A>
+    <H2><EM>1.</EM> konstruktor klasy <EM>LiczbaDziesietna</EM></H2>
+<PRE>
+public LiczbaDziesietna ()
+</PRE>
+    <P>Tworzy obiekt przechowuj¹cy wartoœæ zerow¹.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ld2k" ID="ld2k"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ld">LiczbaDziesietna</A>
+    <H2><EM>2.</EM> konstruktor klasy <EM>LiczbaDziesietna</EM></H2>
+<PRE>
+public LiczbaDziesietna (<A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> tekstObiektowy)
+</PRE>
+    <P>Inicjuje obiekt przetwarzaj¹c tekstowy zapis dziesiêtny. Dopuszczalny
+    jest znak + lub - na pocz¹tku, a oddzielaæ czêœæ u³amkow¹ od ca³kowitej
+    mo¿e kropka b¹dŸ przecinek.</P>
+    <P>W szczególnoœci ka¿dy prawid³owy zapis liczby mieszcz¹cej siê w zakresie
+    w JSON jest tutaj prawid³owy.</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE>ZleZObliczeniamiDziesietnymi</CODE> w razie b³êdnego zapisu
+      liczby albo przekroczenia zakresu.</LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ld3k" ID="ld3k"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ld">LiczbaDziesietna</A>
+    <H2><EM>3.</EM> konstruktor klasy <EM>LiczbaDziesietna</EM></H2>
+<PRE>
+public LiczbaDziesietna (int wartosc, int wykl)
+</PRE>
+    <P>Inicjuje obiekt nadaj¹c mu wartosæ A * 10<SUP>B</SUP>, gdzie:</P>
+    <UL>
+      <LI><VAR>A</VAR> to parametr <CODE>wartosc</CODE>,</LI>
+      <LI><VAR>B</VAR> to parametr <CODE>wykl</CODE>,</LI>
+      <LI>gwiazdka * oznacza mno¿enie.</LI>
+    </UL>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE>ZleZObliczeniamiDziesietnymi</CODE> w razie przekroczenia
+      zakresu.</LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ldro" ID="ldro"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ld">LiczbaDziesietna</A>
+    <H2>Metoda <EM>rowna</EM> klasy <EM>LiczbaDziesietna</EM></H2>
+<PRE>
+public boolean rowna (LiczbaDziesietna inna)
+</PRE>
+    <P>Porównuje liczby dziesiêtne i zwraca prawdê, jeœli s¹ one równe.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ldwi" ID="ldwi"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ld">LiczbaDziesietna</A>
+    <H2>Metoda <EM>wiekszaNiz</EM> klasy <EM>LiczbaDziesietna</EM></H2>
+<PRE>
+public boolean wiekszaNiz (LiczbaDziesietna inna)
+</PRE>
+    <P>Porównuje liczby dziesiêtne i zwraca prawdê, jeœli ta, na której
+    wywo³ano metodê jest wiêksza od tej wskazanej parametrem
+    <CODE>inna</CODE>.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="lddo" ID="lddo"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ld">LiczbaDziesietna</A>
+    <H2>Metoda <EM>dodaj</EM> klasy <EM>LiczbaDziesietna</EM></H2>
+<PRE>
+public LiczbaDziesietna dodaj (LiczbaDziesietna druga)
+</PRE>
+    <P>Zwraca sumê dwóch liczb dziesiêtnych.</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE>ZleZObliczeniamiDziesietnymi</CODE> w razie przekroczenia
+      zakresu.</LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ldod" ID="ldod"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ld">LiczbaDziesietna</A>
+    <H2>Metoda <EM>odejmij</EM> klasy <EM>LiczbaDziesietna</EM></H2>
+<PRE>
+public LiczbaDziesietna odejmij (LiczbaDziesietna odjemnik)
+</PRE>
+    <P>Zwraca wynik odjêcia liczby dziesiêtnej <CODE>odjemnik</CODE> od
+    liczby-obiektu, na którym wywo³ano metodê.</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE>ZleZObliczeniamiDziesietnymi</CODE> w razie przekroczenia
+      zakresu.</LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ldmn" ID="ldmn"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ld">LiczbaDziesietna</A>
+    <H2>Metoda <EM>mnoz</EM> klasy <EM>LiczbaDziesietna</EM></H2>
+<PRE>
+public LiczbaDziesietna mnoz (LiczbaDziesietna inna)
+</PRE>
+    <P>Mno¿y dwie liczby dziesiêtne. Zwraca iloczyn.</P>
+    <H3>Rzuca wyj¹tki:</H3>
+    <UL>
+      <LI><CODE>ZleZObliczeniamiDziesietnymi</CODE> w razie przekroczenia
+      zakresu.</LI>
+    </UL>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ldna" ID="ldna"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ld">LiczbaDziesietna</A>
+    <H2>Metoda <EM>naTekst</EM> klasy <EM>LiczbaDziesietna</EM></H2>
+<PRE>
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> naTekst (int wyrownanieCalkowitej, int wyrownanieUlamkowej,
+  char znakPodzialu, char znakWyrownania, boolean zaznaczacPlus)
+</PRE>
+    <P>Zamienia liczbê dziesiêtn¹ na tekst z mo¿liwoœciami formatowania.</P>
+    <P><CODE>wyrownanieCalkowitej</CODE> - szerokoœæ pola w znakach, do jakiej
+    ma byæ wyrównana czêœæ ca³kowita, jeœli jest krótsza. Zero dla braku
+    wyrównania. Przy zerowej wartoœci ca³kowitej, przyjmowane jest, ¿e ma ona
+    zero cyfr.</P>
+    <P><CODE>wyrownanieUlamkowej</CODE> - szerokoœæ pola w znakach, do jakiej
+    ma byæ wyrównana czêœæ u³amkowa, jesli jest krótsza. Zero dla braku
+    wyrównania.</P>
+    <P><CODE>znakPodzialu</CODE> - znak oddzielaj¹cy czêœæ u³amkow¹ od
+    ca³kowitej, np. kropka lub przecinek.</P>
+    <P><CODE>znakWyrownania</CODE> - znak, którym dope³niana jest d³ugoœæ
+    zapisu przy wyrównywaniu, np. spacja lub cyfra zero.</P>
+    <P><CODE>zaznaczacPlus</CODE> - czy liczby nieujemne maj¹ byæ poprzedzane
+    znakiem "+". Znak liczby nie liczy siê do szerokoœci przy wyrównywaniu.</P>
+    <HR><BR><BR><BR><BR><BR>
+    <A NAME="ldto" ID="ldto"></A>
+    <A HREF="#wstep">Wstêp i spis treœci</A>
+    Klasa <A HREF="#ld">LiczbaDziesietna</A>
+    <H2>Metoda <EM>toString</EM> klasy <EM>LiczbaDziesietna</EM></H2>
+<PRE>
+public <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</A> toString ()
+</PRE>
+    <P>Przedstawia liczbê dziesiêtn¹ w krótkiej formie tekstowej bêd¹c¹
+    prawid³ow¹ wartoœci¹ JSON oraz jednoczeœnie nadaj¹c¹ siê do zamiany na
+    wartoœæ zmiennoprzecinkow¹ przez metodê standardow¹
+    <CODE><A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html#parseFloat-java.lang.String-">Float.parseFloat</A></CODE>,
+    o ile wartoœæ jest reprezentowalna przez typ <CODE>float</CODE>.</P>
+    <P>Wartoœci¹ zwracan¹ tej metody mo¿e byæ np. <CODE>12345000000</CODE>
+    albo <CODE>-0.5</CODE>.</P>
+  </BODY>
+</HTML>
