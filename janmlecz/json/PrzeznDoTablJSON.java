@@ -1,0 +1,22 @@
+package janmlecz.json;
+
+class PrzeznDoTablJSON extends PrzeznWartJSON
+{
+  private TablicaJSON cel;
+
+  public PrzeznDoTablJSON (TablicaJSON t)
+  {
+    cel = t;
+  }////////////////////////////////////////////////////////////////////////////
+
+  public void przekaz (WartoscJSON w)
+  {
+    cel.dodaj (w);
+  }////////////////////////////////////////////////////////////////////////////
+
+  public WartoscJSON zakoncz ()
+  {
+    cel.domknij ();
+    return cel;
+  }////////////////////////////////////////////////////////////////////////////
+}

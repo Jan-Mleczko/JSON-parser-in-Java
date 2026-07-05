@@ -1,0 +1,35 @@
+package janmlecz.json;
+
+class PrzeznDoSlowJSON extends PrzeznWartJSON
+{
+  private SlownikJSON cel;
+  private String kluczNowej;
+
+  public PrzeznDoSlowJSON (SlownikJSON s)
+  {
+    cel = s;
+    kluczNowej = null;
+  }////////////////////////////////////////////////////////////////////////////
+
+  public void ustKlucz (String k)
+  {
+    kluczNowej = k;
+  }////////////////////////////////////////////////////////////////////////////
+
+  public boolean jestKlucz ()
+  {
+    return kluczNowej != null;
+  }////////////////////////////////////////////////////////////////////////////
+
+  public void przekaz (WartoscJSON w)
+  {
+    cel.dodaj (kluczNowej, w);
+    kluczNowej = null;
+  }////////////////////////////////////////////////////////////////////////////
+
+  public WartoscJSON zakoncz ()
+  {
+    cel.domknij ();
+    return cel;
+  }////////////////////////////////////////////////////////////////////////////
+}
