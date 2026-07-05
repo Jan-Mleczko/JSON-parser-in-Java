@@ -262,8 +262,6 @@ public class LiczbaDziesietna
     if (!ujemna && inna.ujemna)
       return true;
 
-    if (ujemna)
-      return bezwzglednaWieksza (inna.cyfry, cyfry);
     return bezwzglednaWieksza (cyfry, inna.cyfry);
   }////////////////////////////////////////////////////////////////////////////
 
